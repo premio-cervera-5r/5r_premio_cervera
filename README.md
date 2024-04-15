@@ -132,6 +132,7 @@ Asegúrese de que la columna "EncodedMasks" sólo contiene cadenas de máscaras 
 Para obtener los mejores resultados, utilice el código proporcionado para codificar y descodificar las máscaras. Este código garantiza que los procesos de codificación y descodificación sean coherentes y precisos.
 
 Ejemplo de envío CSV:
+
 **ID** ---- **Width** ---- **Height** ---- **EncodedMasks**
 
 1 ----- 1920 ------ 1080 ------ MáscaraCodificada1, MáscaraCodificada2, MáscaraCodificada3, ...
