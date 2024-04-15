@@ -133,9 +133,13 @@ Para obtener los mejores resultados, utilice el código proporcionado para codif
 
 Ejemplo de envío CSV:
 ID	Width	Height	EncodedMasks
+
 1	1920	1080	encodedMask1, encodedMask2, encodedMask3, ...
+
 2	1920	1080	encodedMask1
+
 3	1920	1080	encoded_mask_1, encodedMask2
+
 ...	  ...	          ...	                        ...
 
 
