@@ -27,115 +27,116 @@ Los participantes se enfrentan a varios retos, entre los que destacan:
 - Eficacia y rendimiento: conseguir una alta precisión de segmentación manteniendo un rendimiento computacional aceptable
 
 
-## Intersection over Union (IoU) Overview
+## Visión general de la intersección sobre la Unión (IoU)
 
-Intersection over Union (IoU), also known as Jaccard Index, is a widely used metric for evaluating the performance of object detection and segmentation algorithms. It is a measure of the overlap between a predicted bounding box or mask and its corresponding ground truth counterpart.
+La intersección sobre la unión (IoU), también conocida como índice de Jaccard, es una métrica muy utilizada para evaluar el rendimiento de los algoritmos de detección y segmentación de objetos. Se trata de una medida del solapamiento entre un recuadro o máscara de predicción y su equivalente real.
 
-### Formula:
+### Fórmula:
 
 $$ IoU = \frac{|A \cap B|}{|A \cup B|} $$
 
-where: 
-- A is the predicted mask 
-- B is the ground truth mask
+Donde: 
+- A es la máscara predicha
+- B es máscara real
 
-The IoU score ranges from 0 to 1, where 0 indicates no overlap and 1 indicates perfect overlap. A higher IoU score indicates a better match between the predicted mask and the ground truth mask.
+La puntuación IoU oscila entre 0 y 1, donde 0 indica que no hay solapamiento y 1 indica un solapamiento perfecto. Una puntuación IoU más alta indica una mejor coincidencia entre la máscara predicha y la máscara real.
 
-### Benefits of IoU:
+### Beneficios del IoU:
 
-Simplicity: IoU is a straightforward metric to understand and calculate.
-Robustness: IoU is relatively insensitive to minor variations in the segmentations, which is important for real-world applications.
+Simplicidad: El IoU es una métrica sencilla de entender y calcular.
+Robustez: IoU es relativamente insensible a pequeñas variaciones en las segmentaciones, lo que es importante para las aplicaciones del mundo real.
 
 
-## Metric Description
+## Descripción de métrica
 
-The overall segmentation performance is assessed by computing the average IoU score across all images. The IoU score for each image is computed by averaging the IoU score for each object mask within that image.
+El rendimiento global de la segmentación se evalúa calculando la puntuación media del IoU en todas las imágenes. La puntuación IoU de cada imagen se calcula promediando la puntuación IoU de cada máscara de objeto dentro de esa imagen.
 
-The metric code can be found in the provided Jupyter notebook (for now here: IoU Metric Notebook)
+//The metric code can be found in the provided Jupyter notebook (for now here: IoU Metric Notebook)
 
-### Formula
+### Fórmula
 
-Specifically, for image i, the IoU score is calculated for each individual object mask j within that image. The average of these scores represents the image's final IoU score IoU_i. This is expressed mathematically as:
+Específicamente, para la imagen i, la puntuación IoU se calcula para cada máscara de objeto individual j dentro de esa imagen. La media de estas puntuaciones representa la puntuación final IoU_i de la imagen. Esto se expresa matemáticamente como:
 
 $$ \text{IoU}{i} = \frac{1}{M_{i}}\sum_{j=1}^{M_{i}}\text{IoU}_{ij} $$
 
-where: 
-- M_i is the total number of object masks in image i 
-- IoU_ij is the Intersection over Union score for the j-th mask in image i
+Donde: 
+- M_i es el número total de máscaras de los objetos en la imagen i
+- IoU_ij es la puntuación de la intersección sobre la unión de la j-ésima máscara en la imagen i
 
 $$ \text{Final Score} = \frac{1}{N}\sum_{i=1}^{N}\text{IoU}_{i} $$
 
-where: 
-- N is the total number of images in the dataset 
-- IoU_i is the average Intersection over Union score for image i
+Donde:
+- N es el número total de imágenes del conjunto de datos
+- IoU_i es la puntuación media de la intersección sobre la unión de la imagen i
 
 
-## Ground truth and predicted masks matching
+## Coincidencia de máscaras reales y previstas
 
-Matching Ground Truth and Predicted Masks: For each ground truth mask, the predicted mask with the highest IoU is considered the corresponding predicted mask. This ensures that each ground truth mask is matched with the predicted mask that best represents its shape and location.
+Coincidencia de máscaras reales y máscaras predichas: Para cada máscara real, la máscara predicha con el IoU más alto se va a considerar la máscara predicha correspondiente. De este modo se garantiza que cada máscara real coincida con la máscara predicha que mejor represente su forma y ubicación.
 
-IoU Threshold: Only ground truth masks with an IoU score above a certain threshold (0.5 in this challenge) are considered for scoring. This helps to filter out predictions that are only weakly correlated with the ground truth masks. This ensures that the evaluation focuses on the more meaningful matches and prevents inflated scores due to overly conservative predictions.
-
-
-## Masks Encoding to String
-
-To reduce the size of the submission CSV file and simplify the evaluation process, the predicted masks are encoded using a special format. This encoding scheme involves converting the binary masks into run-length encoding (RLE) format, compressing the RLE strings, and then encoding them using base64 encoding.
-
-The encoding functions and an example of CSV encoding are available in the provided Jupyter notebook (for now here: Cervera Encoding and Decoding Notebook)
-
-RLE (Run-length encoding): RLE is a compact representation of binary masks that exploits the repetitive nature of pixels. It works by replacing consecutive runs of identical pixels with a single code that indicates the length of the run. This significantly reduces the size of the encoded mask representation.
-
-zlib Compression: The compressed RLE strings are further compressed using zlib compression algorithm. This further reduces the size of the encoded masks, making it more efficient to store and transmit them.
-
-Base64 Encoding: The final step is to encode the compressed RLE strings using base64 encoding. Base64 encoding ensures that the encoded masks can be stored and transmitted as a standard text string, making them compatible with various data formats and protocols.
-
-The resulting encoded strings are included in the 'EncodedMasks' column of the submission CSV file.
+IoU Threshold: Sólo se tienen en cuenta para la puntuación las máscaras reales con una puntuación IoU superior a un determinado umbral (0,5 en este reto). Esto ayuda a filtrar las predicciones que sólo están débilmente correlacionadas con las máscaras reales. Así se garantiza que la evaluación se centre en las coincidencias más significativas y se evitan puntuaciones infladas debido a predicciones demasiado conservadoras
 
 
-## Decoding Masks from String
+## Codificación de máscaras a String (cadena)
 
-To evaluate the predicted masks, the encoded strings in the submission CSV file need to be decoded back into binary masks. This process involves the following steps:
+Para reducir el tamaño del archivo CSV enviado y simplificar el proceso de evaluación, las máscaras pronosticadas se codifican utilizando un formato especial. Este esquema de codificación consiste en convertir las máscaras binarias al formato de codificación de longitud de ejecución (RLE), comprimir las cadenas RLE y, a continuación, codificarlas utilizando la codificación base64.
 
-Base64 Decoding: The encoded strings are first decoded from base64 format. This converts the encoded masks back into binary strings.
+//The encoding functions and an example of CSV encoding are available in the provided Jupyter notebook (for now here: Cervera Encoding and Decoding Notebook)
 
-RLE Decompression: The decoded binary strings are then decompressed using zlib decompression algorithm. This restores the RLE representations of the masks.
+RLE (Run-length encoding): RLE es una representación compacta de máscaras binarias que explota la naturaleza repetitiva de los píxeles. Funciona sustituyendo tramos consecutivos de píxeles idénticos por un único código que indica la longitud del tramo. Esto reduce significativamente el tamaño de la representación de la máscara codificada.
 
-RLE to Binary Mask Conversion: The RLE strings are converted into binary masks using the COCO API. This process reverses the encoding process to obtain the original binary masks.
+Compresión zlib: Las cadenas RLE comprimidas se comprimen aún más utilizando el algoritmo de compresión zlib. Esto reduce aún más el tamaño de las máscaras codificadas, haciendo más eficiente su almacenamiento y transmisión.
 
-The decoding functions and an example of CSV decoding are available in the provided Jupyter notebook (for now here: Cervera Encoding and Decoding Notebook)
+Codificación Base64: El paso final es codificar las cadenas RLE comprimidas utilizando la codificación base64. La codificación base64 garantiza que las máscaras codificadas puedan almacenarse y transmitirse como una cadena de texto estándar, lo que las hace compatibles con diversos formatos de datos y protocolos.
+
+Las cadenas codificadas resultantes se incluyen en la columna "EncodedMasks" del archivo CSV de envío.
 
 
-## Submission Format
+## Descodificación de máscaras a partir de String (cadena)
 
-### CSV Formatting and Submission
+Para evaluar las máscaras predichas, las cadenas codificadas en el archivo CSV enviado deben descodificarse en máscaras binarias. Este proceso implica los siguientes pasos:
 
-The submission CSV file should have the following columns:
+Descodificación Base64: Las cadenas codificadas se decodifican primero a partir del formato base64. Esto convierte las máscaras codificadas de nuevo en cadenas binarias.
 
-ID: The unique identifier for the image (also called scene)
+Descompresión RLE: Las cadenas binarias descodificadas se descomprimen utilizando el algoritmo de descompresión zlib. Esto restaura las representaciones RLE de las máscaras.
 
-Width: The width of the image
+Conversión de RLE a máscara binaria: Las cadenas RLE se convierten en máscaras binarias utilizando la API COCO. Este proceso invierte el proceso de codificación para obtener las máscaras binarias originales.
 
-Height: The height of the image
+//The decoding functions and an example of CSV decoding are available in the provided Jupyter notebook (for now here: Cervera Encoding and Decoding Notebook)
 
-EncodedMasks: The encoded binary masks for the image (space-separated)
 
-It is important to ensure that the submission CSV file has the correct formatting and that all required columns are present. Any inconsistencies in the formatting or missing columns may result in evaluation errors.
+## Formato de envío
 
-### Rules
+### Formato CSV y envío
 
-The submission CSV file should not be empty, and it should have the exact number of lines as the test CSV file. This ensures that the submission contains predictions for all images in the test set.
+El archivo CSV de envío debe tener las siguientes columnas:
 
-If one prediction is empty, just leave the column 'EncodedMasks' empty but populate the 'ID', 'Width', and 'Height' columns. This indicates that there is no prediction for that particular image.
+ID: Identificador único de la imagen (también llamado escena).
 
-Ensure that the 'EncodedMasks' column contains only valid encoded mask strings. Invalid or corrupted encoded masks will result in errors during the evaluation process.
+Width: La anchura de la imagen
 
-For best results, use the provided code to encode and decode the masks. This code ensures that the encoding and decoding processes are consistent and accurate.
+Height: La altura de la imagen
 
-Example Submission CSV:
-ID	Width	Height	EncodedMasks
-1	1920	1080	encodedMask1, encodedMask2, encodedMask3, ...
-2	1920	1080	encodedMask1
-3	1920	1080	encoded_mask_1, encodedMask2
+EncodedMasks: Las máscaras binarias codificadas para la imagen (separadas por espacios).
+
+Es importante asegurarse de que el archivo CSV enviado tiene el formato correcto y de que están presentes todas las columnas requeridas. Cualquier incoherencia en el formato o ausencia de columnas puede dar lugar a errores de evaluación.
+
+### Reglas
+
+El archivo CSV de envío no debe estar vacío y debe tener el mismo número de líneas que el archivo CSV de prueba. Esto garantiza que el envío contiene predicciones para todas las imágenes del conjunto de prueba.
+
+Si una predicción está vacía, deje la columna "EncodedMasks" vacía y rellene las columnas "ID", "Width" y "Height". Esto indica que no hay ninguna predicción para esa imagen en particular.
+
+Asegúrese de que la columna "EncodedMasks" sólo contiene cadenas de máscaras codificadas válidas. Las máscaras codificadas no válidas o dañadas provocarán errores durante el proceso de evaluación.
+
+Para obtener los mejores resultados, utilice el código proporcionado para codificar y descodificar las máscaras. Este código garantiza que los procesos de codificación y descodificación sean coherentes y precisos.
+
+Ejemplo de envío CSV:
+**ID** ---- **Width** ---- **Height** ---- **EncodedMasks**
+1 ----- 1920 ------ 1080 ------ MáscaraCodificada1, MáscaraCodificada2, MáscaraCodificada3, ...
+2 ----- 1920 ------ 1080 ------ MáscaraCodificada1, ...
+3 ----- 1920 ------ 1080 ------ MáscaraCodificada1, MáscaraCodificada2, ...
+...	  ...	          ...	                        ...
 ...	...	...	...
 
 En el siguiente repositorio público se puede encontrar un ejemplo de Notebook para generar el archivo CSV:
