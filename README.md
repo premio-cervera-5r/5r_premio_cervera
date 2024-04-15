@@ -144,8 +144,6 @@ Ejemplo de envío CSV:
 ...	  ...	          ...	                        ...
 
 
-En el siguiente repositorio público se puede encontrar un ejemplo de Notebook para generar el archivo CSV:
-- https://github.com/premio-cervera-5r/5r_premio_cervera
 
 
 
