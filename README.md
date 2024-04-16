@@ -102,8 +102,6 @@ Descompresión RLE: Las cadenas binarias descodificadas se descomprimen utilizan
 
 Conversión de RLE a máscara binaria: Las cadenas RLE se convierten en máscaras binarias utilizando la API COCO. Este proceso invierte el proceso de codificación para obtener las máscaras binarias originales.
 
-//The decoding functions and an example of CSV decoding are available in the provided Jupyter notebook (for now here: Cervera Encoding and Decoding Notebook)
-
 
 ## Formato de envío
 
@@ -125,23 +123,23 @@ Es importante asegurarse de que el archivo CSV enviado tiene el formato correcto
 
 El archivo CSV de envío no debe estar vacío y debe tener el mismo número de líneas que el archivo CSV de prueba. Esto garantiza que el envío contiene predicciones para todas las imágenes del conjunto de prueba.
 
-Si una predicción está vacía, deje la columna "EncodedMasks" vacía y rellene las columnas "ID", "Width" y "Height". Esto indica que no hay ninguna predicción para esa imagen en particular.
+Si una predicción está vacía (no se ha detectado ninguna máscara para una determinada imagen), ponga un símbolo aleatorio en la columna "EncodedMasks" y rellene las columnas "ID", "Width" y "Height" como siempre. Esto indica que no hay ninguna predicción para esa imagen en particular. 
 
-Asegúrese de que la columna "EncodedMasks" sólo contiene cadenas de máscaras codificadas válidas. Las máscaras codificadas no válidas o dañadas provocarán errores durante el proceso de evaluación.
+Asegúrese de que la columna "EncodedMasks" sólo contiene cadenas de máscaras codificadas válidas. Las máscaras codificadas no válidas o dañadas provocarán errores durante el proceso de evaluación. Las máscaras codificadas deben ir separadas por un espacio.
 
 Para obtener los mejores resultados, utilice el código proporcionado para codificar y descodificar las máscaras. Este código garantiza que los procesos de codificación y descodificación sean coherentes y precisos.
 
 Ejemplo de envío CSV:
 
-**ID** ---- **Width** ---- **Height** ---- **EncodedMasks**
+**ID** | **Width** | **Height** | **EncodedMasks**
 
-1 ----- 1920 ------ 1080 ------ MáscaraCodificada1, MáscaraCodificada2, MáscaraCodificada3, ...
+1 | 1920 | 1080 | MáscaraCodificada1 MáscaraCodificada2 MáscaraCodificada3 ...
 
-2 ----- 1920 ------ 1080 ------ MáscaraCodificada1, ...
+2 | 1920 | 1080 | MáscaraCodificada1 ...
 
-3 ----- 1920 ------ 1080 ------ MáscaraCodificada1, MáscaraCodificada2, ...
+3 | 1920 | 1080 | MáscaraCodificada1 MáscaraCodificada2 ...
 
-...	  ...	          ...	                        ...
+... | ...	| ...	| ...
 
 
 
