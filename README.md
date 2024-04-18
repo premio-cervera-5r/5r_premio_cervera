@@ -81,7 +81,7 @@ IoU Threshold: Sólo se tienen en cuenta para la puntuación las máscaras reale
 
 Para reducir el tamaño del archivo CSV enviado y simplificar el proceso de evaluación, las máscaras pronosticadas se codifican utilizando un formato especial. Este esquema de codificación consiste en convertir las máscaras binarias al formato de codificación de longitud de ejecución (RLE), comprimir las cadenas RLE y, a continuación, codificarlas utilizando la codificación base64.
 
-//The encoding functions and an example of CSV encoding are available in the provided Jupyter notebook (for now here: Cervera Encoding and Decoding Notebook)
+Las funciones de codificación y un ejemplo de codificación CSV están disponibles en el cuaderno Jupyter proporcionado "coco-encoding-compressing-script.ipynb".
 
 RLE (Run-length encoding): RLE es una representación compacta de máscaras binarias que explota la naturaleza repetitiva de los píxeles. Funciona sustituyendo tramos consecutivos de píxeles idénticos por un único código que indica la longitud del tramo. Esto reduce significativamente el tamaño de la representación de la máscara codificada.
 
