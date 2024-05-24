@@ -23,7 +23,7 @@ Por lo tanto, el reto será **desarrollar** un **algoritmo** que pueda identific
 
 Los participantes se enfrentan a varios retos, entre los que destacan:
 
-- **Oclusión y solapamiento:** instancias de objetos que se solapan u ocultan entre sí, lo que complica su identificación individual y segmentación. Será necesario detectar objetos que sean visibles en más del 50% de su superficie.
+- **Oclusión y solapamiento:** instancias de objetos que se solapan u ocultan entre sí, lo que complica su identificación individual y segmentación.
 - **Eficacia y rendimiento:** conseguir una alta precisión de segmentación manteniendo un rendimiento computacional aceptable
 
 
