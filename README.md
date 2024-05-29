@@ -29,6 +29,8 @@ Los participantes se enfrentan a varios retos, entre los que destacan:
 
 ## Evaluación y testeo
 
+**El número máximo de predichas por imagen que puede aceptar el sistema es de 60, las que superen este número serán descartadas.**
+
 ### Visión general de la intersección sobre la Unión (IoU)
 
 La intersección sobre la unión (IoU), también conocida como índice de Jaccard, es una métrica muy utilizada para evaluar el rendimiento de los algoritmos de detección y segmentación de objetos. Se trata de una medida del solapamiento entre un recuadro o máscara de predicción y su equivalente real.
@@ -126,6 +128,8 @@ Es importante asegurarse de que el archivo CSV enviado tiene el formato correcto
 
 
 ### Reglas
+
+**El número máximo de predichas por imagen que puede aceptar el sistema es de 60, las que superen este número serán descartadas.**
 
 El archivo CSV de envío no debe estar vacío y debe tener el mismo número de líneas que el archivo CSV de prueba. Esto garantiza que el envío contiene predicciones para todas las imágenes del conjunto de prueba.
 
